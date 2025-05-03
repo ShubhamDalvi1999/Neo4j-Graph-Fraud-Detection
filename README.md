@@ -64,11 +64,76 @@ The project uses a graph-based approach to detect two types of fraud:
 * Clients in larger clusters are flagged as potential first-party fraudsters with a `firstPartyFraudScore`
 * Clients with scores above the 80th percentile are labeled as `:FirstPartyFraudster`
 
+#### First-Party Fraud Pattern Explanation
+
+First-party fraud (synthetic identity fraud) involves creating fictitious identities or manipulating real identities by sharing key personally identifiable information (PII) across multiple accounts. This is a common pattern in organized fraud rings.
+
+A typical first-party fraud pattern shows:
+
+1. **Multiple Client Accounts**
+   - Different individuals with seemingly unrelated identities
+   - In our example: Madison Ferrell and Ian Gregory
+
+2. **Shared PII Elements**
+   - Multiple clients connected to the same personal identifiers
+   - In our example:
+     - Same email address (johnfrazier67@mail.co-m)
+     - Same phone number (446-870-2234)
+     - Same SSN (555-93-5211)
+
+3. **Relationship Network**
+   - Direct SHARED_IDENTIFIERS relationships between clients
+   - PII nodes (email, phone, SSN) serving as connection points
+   - The more shared identifiers, the stronger the fraud signal
+
+These shared identifiers are highly suspicious because legitimate individuals rarely share multiple pieces of sensitive personal information like SSNs, phone numbers, and email addresses. In legitimate cases, family members might share an address or phone number, but multiple shared identifiers across unrelated individuals strongly indicates synthetic identity fraud.
+
+This pattern is effectively detected using graph algorithms:
+- The Weakly Connected Components (WCC) algorithm finds clusters of interconnected accounts
+- Node similarity algorithms can measure the strength of connections based on shared attributes
+- Degree centrality identifies accounts involved in multiple suspicious connections
+
+By visualizing these connections, fraud investigators can easily identify synthetic identity rings that would be nearly impossible to detect with traditional rule-based systems.
+
 ### Second-Party Fraud Detection (Money Mules):
 * The system analyzes transaction patterns between clients
 * It uses PageRank algorithm to identify clients that function as hubs in transaction flows
 * Transaction amounts are used as relationship weights in the algorithm
 * Clients with high PageRank scores that aren't already identified as first-party fraudsters are labeled as `:SecondPartyFraud`
+
+#### Second-Party Fraud Pattern Explanation
+
+Second-party fraud involves individuals (money mules) who knowingly or unknowingly help criminals move illegally obtained funds. Unlike first-party fraud (synthetic identities), money mules don't create fake identities - they use their legitimate accounts to transfer stolen money.
+
+A typical second-party fraud network includes:
+
+1. **First-Party Fraudsters (Sources)**
+   - These synthetic identities obtain funds illegally
+   - They serve as the SOURCE of illicit funds
+   - They typically have high first-party fraud scores
+
+2. **Money Mules (Intermediaries)**
+   - Primary mules receive funds directly from multiple fraudsters
+   - Secondary mules may receive funds from primary mules (layering)
+   - They serve as INTERMEDIARIES in the transaction chain
+
+3. **Destination Accounts (Beneficiaries)**
+   - These are the ultimate beneficiaries of the fraud
+   - They receive layered funds after passing through mules
+
+The transaction patterns follow the classic three stages of money laundering:
+
+1. **Placement**: First-party fraudsters send funds to primary mules
+2. **Layering**: Mules transfer between themselves to obscure the money trail
+3. **Integration**: Mules forward money to final destinations
+
+Red flags that identify second-party fraud include:
+- Hub-like behavior: Receiving from multiple sources and distributing to multiple destinations
+- Directional flow: Money moves FROM first-party fraudsters THROUGH mules TO destinations
+- Network collaboration: Mules working together to distribute funds
+- High-value transactions occurring in quick succession
+
+This is why PageRank is effective for detection - it identifies nodes that serve as important "hubs" in transaction networks, exactly what money mules do.
 
 The Neo4j Graph Data Science (GDS) library is crucial to this implementation, allowing for:
 * Creation of projected graphs for algorithm execution

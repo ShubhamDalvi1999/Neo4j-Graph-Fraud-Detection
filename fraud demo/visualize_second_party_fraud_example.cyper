@@ -1,0 +1,5 @@
+// PART 2: Second-Party Fraud Example using DEMO data for complete pattern visualization
+// Simpler query with no restrictions to ensure it returns all demo data
+MATCH (node:DemoClient)
+OPTIONAL MATCH (node)-[rel]-(other:DemoClient)
+RETURN node, rel, other
