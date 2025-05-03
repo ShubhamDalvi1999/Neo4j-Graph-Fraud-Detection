@@ -8,7 +8,13 @@ The primary goal is to analyze connections within the Paysim dataset using graph
 
 1.  **First-Party Fraud:** Identify clients potentially misrepresenting their identity by analyzing shared Personally Identifiable Information (PII) like SSN, Email, and Phone numbers. Clients sharing multiple identifiers form suspicious clusters (fraud rings).
 
+![first-party-fraud](https://github.com/user-attachments/assets/154a1f4d-625f-4dfb-ae6b-264b4db14744)
+
+
 2.  **Second-Party Fraud (Money Mules):** Identify accounts potentially used to transfer illicit funds by analyzing transaction patterns.
+
+![second-party-fraud](https://github.com/user-attachments/assets/077960b4-0a72-4437-94b7-fc6946332687)
+
 
 ## Architecture Overview
 
