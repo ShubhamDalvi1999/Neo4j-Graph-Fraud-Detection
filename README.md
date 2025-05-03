@@ -7,7 +7,6 @@ This project demonstrates how to use Neo4j, Graph Data Science (GDS), and Python
 The primary goal is to analyze connections within the Paysim dataset using graph technology to uncover suspicious patterns:
 
 1.  **First-Party Fraud:** Identify clients potentially misrepresenting their identity by analyzing shared Personally Identifiable Information (PII) like SSN, Email, and Phone numbers. Clients sharing multiple identifiers form suspicious clusters (fraud rings).
-![image](https://github.com/user-attachments/assets/f7a4a3cc-5115-4042-8c9f-5db09b8d2b2d)
 
 2.  **Second-Party Fraud (Money Mules):** Identify accounts potentially used to transfer illicit funds by analyzing transaction patterns.
 
