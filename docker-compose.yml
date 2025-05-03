@@ -1,0 +1,40 @@
+services:
+  neo4j:
+    image: neo4j:4.4
+    container_name: neo4j_fraud_detection_44
+    environment:
+      # Set the password for the 'neo4j' user
+      - NEO4J_AUTH=neo4j/change-this-password
+
+      # Specify plugins 
+      - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+
+      # Accept license agreements for plugins (required for GDS)
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*,gds.*
+      - NEO4J_dbms_security_procedures_whitelist=apoc.*,gds.*
+
+      # Allow upgrade from 4.0 dump to 4.4 server
+      - NEO4J_dbms_allow__upgrade=true
+
+      # Disable strict validation to allow plugin installation
+      - NEO4J_server_config_strict__validation_enabled=false
+
+      # Memory settings for Neo4j 4.4 
+      - NEO4J_dbms_memory_pagecache_size=1G
+      - NEO4J_dbms_memory_heap_initial__size=1G
+      - NEO4J_dbms_memory_heap_max__size=1G
+    ports:
+      - "7474:7474"  # Neo4j Browser HTTP port
+      - "7687:7687"  # Bolt port (for drivers)
+    volumes:
+      # Use separate volumes for 4.4
+      - ./neo4j44/data:/data          # Persist Neo4j data
+      - ./neo4j44/logs:/logs          # Persist Neo4j logs
+      - ./neo4j44/import:/var/lib/neo4j/import # Volume for imports (like dumps)
+    restart: unless-stopped
+
+volumes:
+  neo4j44_data:
+  neo4j44_logs:
+  neo4j44_import: 
